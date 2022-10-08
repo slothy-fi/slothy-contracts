@@ -4,10 +4,11 @@ pragma solidity ^0.8.9;
 import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import {ISlothyBlock} from "./interfaces/ISlothyBlock.sol";
+import {SlothyHelpers} from "./helpers/SlothyHelpers.sol";
 
 // Uncomment this line to use console.log
 // import "hardhat/console.sol";
-contract BaseSlothyVault is Ownable {
+contract BaseSlothyVault is Ownable, SlothyHelpers {
     bool public active;
 
     address[] public supportedTokens;
@@ -18,24 +19,21 @@ contract BaseSlothyVault is Ownable {
 
     uint256 public lastRun;
 
-    struct Approval {
-        address token;
-        address spender;
-        uint256 amount;
-    }
-
-    struct Action {
-        address target;
-        bytes32[] data;
-    }
-
     constructor(
+        address _startingToken,
+        uint256 _startingTokenAmount,
         address[] memory _supportedTokens,
         Approval[] memory _approvals,
         Action[] memory _beforeLoop,
         Action[] memory _loop,
         uint256 _waitTime
     ) {
+        IERC20(_startingToken).transferFrom(
+            msg.sender,
+            address(this),
+            _startingTokenAmount
+        );
+
         //TODO way too many loops, optimise
         active = true;
         supportedTokens = _supportedTokens;
@@ -83,6 +81,16 @@ contract BaseSlothyVault is Ownable {
             IERC20(_tokens[i]).transfer(
                 msg.sender,
                 IERC20(_tokens[i]).balanceOf(address(this))
+            );
+        }
+    }
+
+    function stop() public onlyOwner {
+        active = false;
+        for (uint256 i = 0; i < supportedTokens.length; i++) {
+            IERC20(supportedTokens[i]).transfer(
+                msg.sender,
+                IERC20(supportedTokens[i]).balanceOf(address(this))
             );
         }
     }
