@@ -11,7 +11,12 @@ import {SlothyHelpers} from "./helpers/SlothyHelpers.sol";
 contract BaseSlothyVault is Ownable, SlothyHelpers {
     bool public active;
 
+    address public startingToken;
+    uint256 public startingTokenAmount;
+
     address[] public supportedTokens;
+
+    Action[] public beforeLoop;
 
     Action[] public loop;
 
@@ -28,13 +33,8 @@ contract BaseSlothyVault is Ownable, SlothyHelpers {
         Action[] memory _loop,
         uint256 _waitTime
     ) {
-        IERC20(_startingToken).transferFrom(
-            msg.sender,
-            address(this),
-            _startingTokenAmount
-        );
-
-        //TODO way too many loops, optimise
+        startingToken = _startingToken;
+        startingTokenAmount = _startingTokenAmount;
         active = true;
         supportedTokens = _supportedTokens;
 
@@ -46,7 +46,7 @@ contract BaseSlothyVault is Ownable, SlothyHelpers {
         }
 
         for (uint256 i = 0; i < _beforeLoop.length; i++) {
-            ISlothyBlock(_beforeLoop[i].target).run(_beforeLoop[i].data);
+            beforeLoop.push(_beforeLoop[i]);
         }
 
         for (uint256 i = 0; i < _loop.length; i++) {
@@ -56,6 +56,18 @@ contract BaseSlothyVault is Ownable, SlothyHelpers {
         waitTime = _waitTime;
 
         lastRun = block.timestamp;
+    }
+
+    function setUp() public {
+        IERC20(startingToken).transferFrom(
+            msg.sender,
+            address(this),
+            startingTokenAmount
+        );
+
+        for (uint256 i = 0; i < beforeLoop.length; i++) {
+            ISlothyBlock(beforeLoop[i].target).run(beforeLoop[i].data);
+        }
     }
 
     function runLoop() public {

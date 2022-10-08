@@ -12,4 +12,20 @@ contract SlothyHelpers {
         address target;
         bytes32[] data;
     }
+
+    function argToAddress(bytes32 _arg)
+        external
+        pure
+        returns (address _address)
+    {
+        _address = address(uint160(uint256(_arg)));
+    }
+
+    function argToUint256(bytes32 _arg)
+        external
+        pure
+        returns (uint256 _uint256)
+    {
+        _uint256 = uint256(_arg);
+    }
 }

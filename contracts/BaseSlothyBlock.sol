@@ -3,10 +3,11 @@ pragma solidity ^0.8.9;
 
 import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import {SlothyHelpers} from "./helpers/SlothyHelpers.sol";
 
 // Uncomment this line to use console.log
 // import "hardhat/console.sol";
-contract BaseSlothyBlock is Ownable {
+contract BaseSlothyBlock is Ownable, SlothyHelpers {
     bool public active;
 
     constructor() {
@@ -21,22 +22,6 @@ contract BaseSlothyBlock is Ownable {
         uint256 _amount
     ) external {
         IERC20(_token).approve(_to, _amount);
-    }
-
-    function argToAddress(bytes32 _arg)
-        external
-        pure
-        returns (address _address)
-    {
-        _address = address(uint160(uint256(_arg)));
-    }
-
-    function argToUint256(bytes32 _arg)
-        external
-        pure
-        returns (uint256 _uint256)
-    {
-        _uint256 = uint256(_arg);
     }
 
     function emergencyWithdrawETH() external onlyOwner {
