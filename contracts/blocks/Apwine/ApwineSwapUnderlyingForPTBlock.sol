@@ -51,6 +51,22 @@ contract ApwineSwapUnderlyingForPTBlock is BaseSlothyBlock {
         );
         //! _minAmountOut and _deadline above should be computed and passed at runtime, by a script or client
 
+        emit ApwineSwapUnderlyingForPTBlockEvent(
+            msg.sender,
+            _outputTokenAmount,
+            _AMMAddress,
+            _underlyingTokenAddress,
+            _underlyingTokenAmount
+        );
+
         return true;
     }
+
+    event ApwineSwapUnderlyingForPTBlockEvent(
+        address indexed _vaultAddress,
+        uint256 _outputTokenAmount,
+        address _AMMAddress,
+        address _underlyingTokenAddress,
+        uint256 _underlyingTokenAmount
+    );
 }

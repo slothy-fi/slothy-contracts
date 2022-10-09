@@ -12,14 +12,14 @@ contract ApwineDepositBlock is BaseSlothyBlock {
     function run(bytes32[] memory _args) public returns (bool _success) {
         /**
          * @dev _args[0] = _tokenAddress
-         * @dev _args[1] = _vaultAddress
+         * @dev _args[1] = _wineVaultAddress
          * @dev _args[2] = _principalToken
          * @dev _args[3] = _futureYieldToken
          * @dev _args[4] = _amount
          */
 
         address _tokenAddress = this.argToAddress(_args[0]);
-        address _vaultAddress = this.argToAddress(_args[1]);
+        address _wineVaultAddress = this.argToAddress(_args[1]);
         address _principalToken = this.argToAddress(_args[2]);
         address _futureYieldToken = this.argToAddress(_args[3]);
         uint256 _amount = this.argToUint256(_args[4]);
@@ -31,7 +31,7 @@ contract ApwineDepositBlock is BaseSlothyBlock {
         IERC20(_tokenAddress).approve(CONTROLLER, _amount);
 
         // deposit to Apwine
-        IApwine(CONTROLLER).deposit(_vaultAddress, _amount);
+        IApwine(CONTROLLER).deposit(_wineVaultAddress, _amount);
 
         // transfer principal token back to slothy vault
         IERC20(_principalToken).transfer(
@@ -45,6 +45,24 @@ contract ApwineDepositBlock is BaseSlothyBlock {
             IERC20(_principalToken).balanceOf(address(this))
         );
 
+        emit ApwineDepositBlockEvent(
+            msg.sender,
+            _tokenAddress,
+            _wineVaultAddress,
+            _principalToken,
+            _futureYieldToken,
+            _amount
+        );
+
         return true;
     }
+
+    event ApwineDepositBlockEvent(
+        address indexed _vaultAddress,
+        address _tokenAddress,
+        address _wineVaultAddress,
+        address _principalToken,
+        address _futureYieldToken,
+        uint256 _amount
+    );
 }

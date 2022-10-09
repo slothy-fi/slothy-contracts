@@ -5,9 +5,6 @@ import {BaseSlothyBlock} from "../../BaseSlothyBlock.sol";
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 contract SimpleSendToBlock is BaseSlothyBlock {
-    address internal constant CONTROLLER =
-        0x4bA30FA240047c17FC557b8628799068d4396790;
-
     function run(bytes32[] memory _args) public returns (bool _success) {
         /**
          * @dev _args[0] = _tokenAddress
@@ -29,6 +26,20 @@ contract SimpleSendToBlock is BaseSlothyBlock {
         // send to recipient
         IERC20(_tokenAddress).transfer(_recipientAddress, _tokenAmount);
 
+        emit SimpleSendToBlockEvent(
+            msg.sender,
+            _tokenAddress,
+            _tokenAmount,
+            _recipientAddress
+        );
+
         return true;
     }
+
+    event SimpleSendToBlockEvent(
+        address indexed _vaultAddress,
+        address _tokenAddress,
+        uint256 _tokenAmount,
+        address _recipientAddress
+    );
 }

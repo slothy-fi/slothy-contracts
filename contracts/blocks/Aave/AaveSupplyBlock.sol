@@ -26,6 +26,14 @@ contract AaveSupplyBlock is BaseSlothyBlock {
             referralCode
         );
 
+        emit AaveSupplyBlockEvent(msg.sender, _assetAddress, _amount);
+
         return true;
     }
+
+    event AaveSupplyBlockEvent(
+        address indexed _vaultAddress,
+        address _assetAddress,
+        uint256 _amount
+    );
 }

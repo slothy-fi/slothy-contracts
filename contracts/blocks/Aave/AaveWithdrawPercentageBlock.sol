@@ -33,6 +33,20 @@ contract AaveWithdrawAllBlock is BaseSlothyBlock {
 
         IAave(AAVE_POOL).withdraw(_assetAddress, amountToWithdraw, msg.sender);
 
+        emit AaveWithdrawPercentageBlockEvent(
+            msg.sender,
+            _assetAddress,
+            amountToWithdraw,
+            _percentage
+        );
+
         return true;
     }
+
+    event AaveWithdrawPercentageBlockEvent(
+        address indexed _vaultAddress,
+        address _assetAddress,
+        uint256 _amount,
+        uint256 _percentage
+    );
 }

@@ -12,13 +12,13 @@ contract ApwineRedeemBlock is BaseSlothyBlock {
     function run(bytes32[] memory _args) public returns (bool _success) {
         /**
          * @dev _args[0] = _outputTokenAddress
-         * @dev _args[1] = _vaultAddress
+         * @dev _args[1] = _wineVaultAddress
          * @dev _args[2] = _principalToken
          * @dev _args[3] = _futureYieldToken
          */
 
         address _outputTokenAddress = this.argToAddress(_args[0]);
-        address _vaultAddress = this.argToAddress(_args[1]);
+        address _wineVaultAddress = this.argToAddress(_args[1]);
         address _principalToken = this.argToAddress(_args[2]);
         address _futureYieldToken = this.argToAddress(_args[3]);
 
@@ -36,8 +36,8 @@ contract ApwineRedeemBlock is BaseSlothyBlock {
 
         // withdraw from to Apwine
         IApwine(CONTROLLER).withdraw(
-            _vaultAddress,
-            IERC20(_principalToken).balanceOf(address(this)) //! MIGHT BE WRONG, LOOK IF CAN CALCULATE PREDICTED AMOUNT OUT
+            _wineVaultAddress,
+            IERC20(_principalToken).balanceOf(address(this)) //! PROLLY WRONG, LOOK IF CAN CALCULATE PREDICTED AMOUNT OUT
         );
 
         // transfer output token back to slothy vault
@@ -46,6 +46,22 @@ contract ApwineRedeemBlock is BaseSlothyBlock {
             IERC20(_outputTokenAddress).balanceOf(address(this))
         );
 
+        emit ApwineRedeemBlockEvent(
+            msg.sender,
+            _outputTokenAddress,
+            _wineVaultAddress,
+            _principalToken,
+            _futureYieldToken
+        );
+
         return true;
     }
+
+    event ApwineRedeemBlockEvent(
+        address indexed _vaultAddress,
+        address _outputTokenAddress,
+        address _wineVaultAddress,
+        address _principalToken,
+        address _futureYieldToken
+    );
 }
