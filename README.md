@@ -1,13 +1,8 @@
-# Sample Hardhat Project
+# Slothyfi Contracts
 
-This project demonstrates a basic Hardhat use case. It comes with a sample contract, a test for that contract, and a script that deploys that contract.
+This repository contains the smart contracts for the Slothyfi protocol.
 
-Try running some of the following tasks:
+## Building your own block
 
-```shell
-npx hardhat help
-npx hardhat test
-REPORT_GAS=true npx hardhat test
-npx hardhat node
-npx hardhat run scripts/deploy.ts
-```
+Anyone can add their custom block to Slothyfi. To do so, you need to create a new contract that inherits from the `BaseSlothyBlock` contract.  
+You can find an example of a blocks in the `blocks/` directory.
