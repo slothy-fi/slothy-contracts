@@ -6,8 +6,6 @@ import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import {ISlothyBlock} from "./interfaces/ISlothyBlock.sol";
 import {SlothyHelpers} from "./helpers/SlothyHelpers.sol";
 
-// Uncomment this line to use console.log
-// import "hardhat/console.sol";
 contract BaseSlothyVault is Ownable, SlothyHelpers {
     bool public active;
 
@@ -35,7 +33,6 @@ contract BaseSlothyVault is Ownable, SlothyHelpers {
     ) {
         startingToken = _startingToken;
         startingTokenAmount = _startingTokenAmount;
-        active = true;
         supportedTokens = _supportedTokens;
 
         for (uint256 i = 0; i < _approvals.length; i++) {
@@ -59,6 +56,9 @@ contract BaseSlothyVault is Ownable, SlothyHelpers {
     }
 
     function setUp() public {
+        require(!active, "Already set up");
+        active = true;
+
         IERC20(startingToken).transferFrom(
             msg.sender,
             address(this),
@@ -70,10 +70,7 @@ contract BaseSlothyVault is Ownable, SlothyHelpers {
         }
     }
 
-    function runLoop() public {
-        require(active, "Vault is not active");
-        require(block.timestamp >= lastRun + waitTime, "Cannot run loop yet");
-
+    function runLoop() public onlyActiveLoop {
         for (uint256 i = 0; i < loop.length; i++) {
             ISlothyBlock(loop[i].target).run(loop[i].data);
         }
@@ -109,5 +106,11 @@ contract BaseSlothyVault is Ownable, SlothyHelpers {
 
     function toggleActive() external onlyOwner {
         active = !active;
+    }
+
+    modifier onlyActiveLoop() {
+        require(active, "Vault is not active");
+        require(block.timestamp >= lastRun + waitTime, "Cannot run loop yet");
+        _;
     }
 }

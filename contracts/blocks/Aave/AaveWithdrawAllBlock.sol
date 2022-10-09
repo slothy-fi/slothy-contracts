@@ -13,26 +13,21 @@ contract AaveWithdrawAllBlock is BaseSlothyBlock {
         /**
          * @dev _args[0] = _assetAddress
          * @dev _args[1] = _amount
-         * @dev _args[2] = _slothyVaultAddress
-         * @dev _args[3] = _receiptTokenAddress
+         * @dev _args[2] = _receiptTokenAddress
          */
 
         address _assetAddress = this.argToAddress(_args[0]);
         uint256 _amount = this.argToUint256(_args[1]);
-        address _slothyVaultAddress = this.argToAddress(_args[2]);
-        address _receiptTokenAddress = this.argToAddress(_args[3]);
-
-        // require msg sender to be token destination
-        require(_slothyVaultAddress == msg.sender, "Not slothy vault");
+        address _receiptTokenAddress = this.argToAddress(_args[2]);
 
         // move receipt token address to this contract
         IERC20(_receiptTokenAddress).transferFrom(
-            _slothyVaultAddress,
+            msg.sender,
             address(this),
             _amount
         );
 
-        IAave(AAVE_POOL).withdraw(_assetAddress, _amount, _slothyVaultAddress);
+        IAave(AAVE_POOL).withdraw(_assetAddress, _amount, msg.sender);
 
         return true;
     }

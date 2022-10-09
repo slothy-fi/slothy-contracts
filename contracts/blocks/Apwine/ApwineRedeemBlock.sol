@@ -15,28 +15,23 @@ contract ApwineRedeemBlock is BaseSlothyBlock {
          * @dev _args[1] = _vaultAddress
          * @dev _args[2] = _principalToken
          * @dev _args[3] = _futureYieldToken
-         * @dev _args[4] = _slothyVaultAddress
          */
 
         address _outputTokenAddress = this.argToAddress(_args[0]);
         address _vaultAddress = this.argToAddress(_args[1]);
         address _principalToken = this.argToAddress(_args[2]);
         address _futureYieldToken = this.argToAddress(_args[3]);
-        address _slothyVaultAddress = this.argToAddress(_args[4]);
-
-        // require msg sender to be token destination
-        require(_slothyVaultAddress == msg.sender, "Not slothy vault");
 
         // borrow from vault
         IERC20(_principalToken).transferFrom(
-            _slothyVaultAddress,
+            msg.sender,
             address(this),
-            IERC20(_principalToken).balanceOf(_slothyVaultAddress)
+            IERC20(_principalToken).balanceOf(msg.sender)
         );
         IERC20(_futureYieldToken).transferFrom(
-            _slothyVaultAddress,
+            msg.sender,
             address(this),
-            IERC20(_futureYieldToken).balanceOf(_slothyVaultAddress)
+            IERC20(_futureYieldToken).balanceOf(msg.sender)
         );
 
         // withdraw from to Apwine
@@ -47,7 +42,7 @@ contract ApwineRedeemBlock is BaseSlothyBlock {
 
         // transfer output token back to slothy vault
         IERC20(_outputTokenAddress).transfer(
-            _slothyVaultAddress,
+            msg.sender,
             IERC20(_outputTokenAddress).balanceOf(address(this))
         );
 

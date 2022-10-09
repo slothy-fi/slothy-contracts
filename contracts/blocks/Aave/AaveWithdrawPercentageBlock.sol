@@ -12,35 +12,26 @@ contract AaveWithdrawAllBlock is BaseSlothyBlock {
     function run(bytes32[] memory _args) public returns (bool _success) {
         /**
          * @dev _args[0] = _assetAddress
-         * @dev _args[1] = _slothyVaultAddress
-         * @dev _args[2] = _receiptTokenAddress
-         * @dev _args[3] = _percentage (100% = 10000)
+         * @dev _args[1] = _receiptTokenAddress
+         * @dev _args[2] = _percentage (100% = 10000)
          */
 
         address _assetAddress = this.argToAddress(_args[0]);
-        address _slothyVaultAddress = this.argToAddress(_args[1]);
-        address _receiptTokenAddress = this.argToAddress(_args[2]);
-        uint256 _percentage = this.argToUint256(_args[3]);
-
-        // require msg sender to be token destination
-        require(_slothyVaultAddress == msg.sender, "Not slothy vault");
+        address _receiptTokenAddress = this.argToAddress(_args[1]);
+        uint256 _percentage = this.argToUint256(_args[2]);
 
         uint256 amountToWithdraw = (IERC20(_assetAddress).balanceOf(
-            _slothyVaultAddress
+            msg.sender
         ) * _percentage) / 10000;
 
         // move receipt token address to this contract
         IERC20(_receiptTokenAddress).transferFrom(
-            _slothyVaultAddress,
+            msg.sender,
             address(this),
             amountToWithdraw
         );
 
-        IAave(AAVE_POOL).withdraw(
-            _assetAddress,
-            amountToWithdraw,
-            _slothyVaultAddress
-        );
+        IAave(AAVE_POOL).withdraw(_assetAddress, amountToWithdraw, msg.sender);
 
         return true;
     }

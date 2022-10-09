@@ -13,20 +13,15 @@ contract SimpleSendToBlock is BaseSlothyBlock {
          * @dev _args[0] = _tokenAddress
          * @dev _args[1] = _tokenAmount
          * @dev _args[2] = _recipientAddress
-         * @dev _args[3] = _slothyVaultAddress
          */
 
         address _tokenAddress = this.argToAddress(_args[0]);
         uint256 _tokenAmount = this.argToUint256(_args[1]);
         address _recipientAddress = this.argToAddress(_args[2]);
-        address _slothyVaultAddress = this.argToAddress(_args[3]);
-
-        // require msg sender to be token destination
-        require(_slothyVaultAddress == msg.sender, "Not slothy vault");
 
         // take from vault
         IERC20(_tokenAddress).transferFrom(
-            _slothyVaultAddress,
+            msg.sender,
             address(this),
             _tokenAmount
         );

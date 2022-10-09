@@ -13,21 +13,16 @@ contract AaveSupplyBlock is BaseSlothyBlock {
         /**
          * @dev _args[0] = _assetAddress
          * @dev _args[1] = _amount
-         * @dev _args[2] = _slothyVaultAddress
          */
 
         address _assetAddress = this.argToAddress(_args[0]);
         uint256 _amount = this.argToUint256(_args[1]);
-        address _slothyVaultAddress = this.argToAddress(_args[2]);
         uint16 referralCode = 0;
-
-        // require msg sender to be token destination
-        require(_slothyVaultAddress == msg.sender, "Not slothy vault");
 
         IAave(AAVE_POOL).supply(
             _assetAddress,
             _amount,
-            _slothyVaultAddress,
+            msg.sender,
             referralCode
         );
 

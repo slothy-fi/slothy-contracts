@@ -11,27 +11,20 @@ contract ApwineSwapUnderlyingForPTBlock is BaseSlothyBlock {
 
     function run(bytes32[] memory _args) public returns (bool _success) {
         /**
-         * @dev _args[0] = _outputTokenAddress
-         * @dev _args[1] = _outputTokenAmount
-         * @dev _args[2] = _AMMAddress
-         * @dev _args[3] = _underlyingTokenAddress
-         * @dev _args[4] = _underlyingTokenAmount
-         * @dev _args[5] = _slothyVaultAddress
+         * @dev _args[0] = _outputTokenAmount
+         * @dev _args[1] = _AMMAddress
+         * @dev _args[2] = _underlyingTokenAddress
+         * @dev _args[3] = _underlyingTokenAmount
          */
 
-        address _outputTokenAddress = this.argToAddress(_args[0]);
-        uint256 _outputTokenAmount = this.argToUint256(_args[1]);
-        address _AMMAddress = this.argToAddress(_args[2]);
-        address _underlyingTokenAddress = this.argToAddress(_args[3]);
-        uint256 _underlyingTokenAmount = this.argToUint256(_args[4]);
-        address _slothyVaultAddress = this.argToAddress(_args[5]);
-
-        // require msg sender to be token destination
-        require(_slothyVaultAddress == msg.sender, "Not slothy vault");
+        uint256 _outputTokenAmount = this.argToUint256(_args[0]);
+        address _AMMAddress = this.argToAddress(_args[1]);
+        address _underlyingTokenAddress = this.argToAddress(_args[2]);
+        uint256 _underlyingTokenAmount = this.argToUint256(_args[3]);
 
         // borrow from vault
         IERC20(_underlyingTokenAddress).transferFrom(
-            _slothyVaultAddress,
+            msg.sender,
             address(this),
             _underlyingTokenAmount
         );
