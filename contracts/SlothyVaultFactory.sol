@@ -10,6 +10,9 @@ import {SlothyHelpers} from "./helpers/SlothyHelpers.sol";
 contract SlothyVaultFactory is Ownable, SlothyHelpers {
     bool public deprecated;
 
+    // address to strategy mapping
+    mapping(address => address) userToVault;
+
     constructor() {
         deprecated = false;
     }
@@ -23,14 +26,21 @@ contract SlothyVaultFactory is Ownable, SlothyHelpers {
         Action[] memory _loop,
         uint256 _waitTime
     ) public {
-        new BaseSlothyVault(
-            _startingToken,
-            _startingTokenAmount,
-            _supportedTokens,
-            _approvals,
-            _beforeLoop,
-            _loop,
-            _waitTime
+        require(
+            userToVault[msg.sender] == address(0),
+            "Vault for this user already exists."
+        );
+
+        userToVault[msg.sender] = address(
+            new BaseSlothyVault(
+                _startingToken,
+                _startingTokenAmount,
+                _supportedTokens,
+                _approvals,
+                _beforeLoop,
+                _loop,
+                _waitTime
+            )
         );
     }
 }
