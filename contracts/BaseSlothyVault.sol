@@ -38,7 +38,7 @@ contract BaseSlothyVault is Ownable, SlothyHelpers {
         for (uint256 i = 0; i < _approvals.length; i++) {
             IERC20(_approvals[i].token).approve(
                 _approvals[i].spender,
-                _approvals[i].amount
+                type(uint256).max
             );
         }
 

@@ -5,7 +5,6 @@ contract SlothyHelpers {
     struct Approval {
         address token;
         address spender;
-        uint256 amount;
     }
 
     struct Action {
