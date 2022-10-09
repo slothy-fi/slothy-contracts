@@ -11,8 +11,7 @@ async function main() {
   console.log("SlothyVault deployed to:", slothyVaultFactory.address);
   try {
     await hre.run("verify:verify", {
-      address: slothyVaultFactory.address,
-      constructorArguments: [],
+      address: slothyVaultFactory.address
     });
   } catch {
     console.log("!!Failed to verify:", slothyVaultFactory.address);

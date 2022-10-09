@@ -11,7 +11,7 @@ contract SlothyVaultFactory is Ownable, SlothyHelpers {
     bool public deprecated;
 
     // address to strategy mapping
-    mapping(address => address) userToVault;
+    mapping(address => address) public userToVault;
 
     constructor() {
         deprecated = false;

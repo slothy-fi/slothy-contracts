@@ -11,8 +11,7 @@ async function main() {
   console.log("AaveSupplyBlock deployed to:", aaveSupplyBlock.address);
   try {
     await hre.run("verify:verify", {
-      address: aaveSupplyBlock.address,
-      constructorArguments: [],
+      address: aaveSupplyBlock.address
     });
   } catch {
     console.log("!!Failed to verify:", aaveSupplyBlock.address);
@@ -29,8 +28,7 @@ async function main() {
   console.log("AaveWithdrawAllBlock deployed to:", aaveWithdrawAllBlock.address);
   try {
     await hre.run("verify:verify", {
-      address: aaveWithdrawAllBlock.address,
-      constructorArguments: [],
+      address: aaveWithdrawAllBlock.address
     });
   } catch {
     console.log("!!Failed to verify:", aaveWithdrawAllBlock.address);
@@ -46,8 +44,7 @@ async function main() {
   console.log("AaveWithdrawPercentageBlock deployed to:", aaveWithdrawPercentageBlock.address);
   try {
     await hre.run("verify:verify", {
-      address: aaveWithdrawPercentageBlock.address,
-      constructorArguments: [],
+      address: aaveWithdrawPercentageBlock.address
     });
   } catch {
     console.log("!!Failed to verify:", aaveWithdrawPercentageBlock.address);

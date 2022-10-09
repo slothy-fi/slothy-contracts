@@ -5,7 +5,7 @@ import {BaseSlothyBlock} from "../../BaseSlothyBlock.sol";
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import {IAave} from "../../interfaces/IAave.sol";
 
-contract AaveWithdrawAllBlock is BaseSlothyBlock {
+contract AaveWithdrawPercentageBlock is BaseSlothyBlock {
     address internal constant AAVE_POOL =
         0x794a61358D6845594F94dc1DB02A252b5b4814aD;
 
